@@ -104,6 +104,43 @@ ___TEMPLATE_PARAMETERS___
     "newRowButtonText": "Add configuration"
   },
   {
+    "type": "TEXT",
+    "name": "pianoScriptDomain",
+    "displayName": "Enter URL for loading the Piano Analytics script",
+    "simpleValueType": true,
+    "valueHint": "domain.example",
+    "defaultValue": "tag.aticdn.net"
+  },
+  {
+    "type": "TEXT",
+    "name": "pianoScriptPath",
+    "displayName": "Enter path for loading the Piano Analytics script",
+    "simpleValueType": true,
+    "valueHint": "/pa.js",
+    "defaultValue": "/piano_analytics.js"
+  },
+  {
+    "type": "SIMPLE_TABLE",
+    "name": "eventTable",
+    "displayName": "These parameters will be added to all events",
+    "simpleTableColumns": [
+      {
+        "defaultValue": "",
+        "displayName": "Event parameter",
+        "name": "propKey",
+        "type": "TEXT",
+        "valueHint": ""
+      },
+      {
+        "defaultValue": "",
+        "displayName": "Parameter Value",
+        "name": "propValue",
+        "type": "TEXT"
+      }
+    ],
+    "newRowButtonText": "Add parameters to all events"
+  },
+  {
     "type": "GROUP",
     "name": "privacySettings",
     "displayName": "Privacy modes",
@@ -264,6 +301,10 @@ confObject.privacyDefaultMode = data.privacyDefaultMode || 'optin';
 confObject.queueVarName = data.queueVarName || '_paq';
 const otherConf = (data.confTable) ? makeTableMap(data.confTable, 'confKey', 'confValue') : {};
 
+const eventParams = (data.eventTable) ? makeTableMap(data.eventTable, 'propKey', 'propValue') : {};
+confObject.eventParams = eventParams;
+log(confObject);
+
 let privacyArray = [];
 const privacyStorageActions = data.privacyStorageActions || [];
 const privacyEventActions = data.privacyEventActions || [];
@@ -278,6 +319,8 @@ for (var conf in otherConf) {
   confObject[conf] = (keyToParse.indexOf(conf) > -1) ? JSON.parse(otherConf[conf]) : otherConf[conf];
 }
 confObject.privacy = privacyArray;
+
+confObject.pianoScriptUrl = data.pianoScriptDomain +  data.pianoScriptPath || '';
 
 return confObject;
 
